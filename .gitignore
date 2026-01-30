@@ -1,0 +1,5 @@
+# State files (logs, runtime data)
+state/
+
+# Backups
+backup_*/
