@@ -55,6 +55,12 @@ yabai -m rule --add app="^Preview$" manage=off sub-layer=normal
 # ============================================================================
 
 SCRIPTS_DIR="$HOME/.config/yabai/scripts"
+STATE_DIR="$HOME/.config/yabai/state"
+
+# Truncate log on startup (keep last 100 lines)
+mkdir -p "$STATE_DIR"
+tail -100 "$STATE_DIR/display_manager.log" 2>/dev/null > /tmp/yabai_log_tmp && \
+    mv /tmp/yabai_log_tmp "$STATE_DIR/display_manager.log" || true
 
 # Signal handlers for display connect/disconnect
 yabai -m signal --add event=display_added \
