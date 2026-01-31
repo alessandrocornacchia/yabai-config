@@ -27,6 +27,12 @@ switch_to_builtin_mode() {
 
     sleep 1  # Let macOS settle after display change
 
+    # Verify we still have only 1 display (guard against race condition)
+    if [[ $(get_display_count) -gt 1 ]]; then
+        log "Aborting built-in mode: external display now connected"
+        return 0
+    fi
+
     # Set all spaces to float layout
     local spaces=$(yabai -m query --spaces | jq -r '.[].index')
     for space in $spaces; do
@@ -56,6 +62,12 @@ switch_to_external_mode() {
     log "Switching to external mode (BSP)..."
 
     sleep 2  # Let macOS settle after display change
+
+    # Verify we still have multiple displays (guard against race condition)
+    if [[ $(get_display_count) -eq 1 ]]; then
+        log "Aborting external mode: only built-in display present"
+        return 0
+    fi
 
     # Set all spaces to BSP layout
     local spaces=$(yabai -m query --spaces | jq -r '.[].index')
